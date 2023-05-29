@@ -49,13 +49,24 @@ enum {  MKD_NOLINKS=0,		/* don't do link processing, block <a> tags  */
 	MKD_NR_FLAGS };
 
 
-typedef struct { char bit[MKD_NR_FLAGS]; } mkd_flag_t;
+typedef struct { char bit[MKD_NR_FLAGS]; } mkd3_flag_t;
+#ifdef V2_INTERFACE
+typedef uint32_t mkd_flag_t;
+#else
+typedef mkd3_flag_t mkd_flag_t;
+#endif
 
 void mkd_init_flags(mkd_flag_t *p);
 
+#ifdef V2_INTERFACE
+#define is_flag_set(flags, item)	((flags) & (item])
+#define set_mkd_flag(flags, item)	((flags) |= (item))
+#define clear_mkd_flag(flags, item)	((flags) &= ~(item))
+#else
 #define is_flag_set(flags, item)	((flags)->bit[item])
 #define set_mkd_flag(flags, item)	((flags)->bit[item] = 1)
 #define clear_mkd_flag(flags, item)	((flags)->bit[item] = 0)
+#endif
 
 #define COPY_FLAGS(dst,src)	memcpy(&dst,&src,sizeof dst)
 
@@ -223,27 +234,11 @@ struct string_stream {
     int   size;		/* and how much is there? */
 } ;
 
-/*
- * sneakily back-define the published interface (leaving the old functions for v2 compatibility)
- */
-
-#define mkd_in mkd3_in
-#define mkd_string mkd3_string
-#define gfm_in gfm3_in
-#define gfm_string gfm3_string
-#define mkd_compile mkd3_compile
-#define mkd_dump mkd3_dump
-#define markdown markdown3
-#define mkd_line mkd3_line
-#define mkd_xhtmlpage mkd3_xhtmlpage
-#define mkd_generateline mkd3_generateline
-#define mkd_flags_are mkd3_flags_are
-
 
 /* the published interface (plus a few local functions that I need to fix)
  */
 extern int  mkd_firstnonblank(Line *);
-extern int  mkd_compile(Document *, mkd_flag_t*);
+extern int  __mkd_compile(Document *, mkd_flag_t*);
 extern int  mkd_document(Document *, char **);
 extern int  mkd_generatehtml(Document *, FILE *);
 extern int  mkd_css(Document *, char **);
@@ -260,11 +255,11 @@ extern void mkd_basename(Document*, char *);
 typedef int (*mkd_sta_function_t)(const int,const void*);
 extern void mkd_string_to_anchor(char*,int, mkd_sta_function_t, void*, int, MMIOT *);
 
-extern Document *mkd_in(FILE *, mkd_flag_t*);
-extern Document *mkd_string(const char*, int, mkd_flag_t*);
+extern Document *__mkd_in(FILE *, mkd_flag_t*);
+extern Document *__mkd_string(const char*, int, mkd_flag_t*);
 
-extern Document *gfm_in(FILE *, mkd_flag_t*);
-extern Document *gfm_string(const char*,int, mkd_flag_t*);
+extern Document *__gfm_in(FILE *, mkd_flag_t*);
+extern Document *__gfm_string(const char*,int, mkd_flag_t*);
 
 extern void mkd_initialize(void);
 extern void mkd_shlib_destructor(void);

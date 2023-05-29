@@ -57,6 +57,12 @@
 #define MKD2_LATEX		0x40000000
 #define MKD2_EXPLICITLIST	0x80000000
 
+extern int __mkd_dump(Document *doc, FILE *out, mkd_flag_t *flags, char *title);
+extern int __markdown(Document *document, FILE *out, mkd_flag_t* flags);
+extern int __mkd_line(char *bfr, int size, char **res, mkd_flag_t* flags);
+extern int __mkd_xhtmlpage(Document *p, mkd_flag_t* flags, FILE *out);
+extern int __mkd_generateline(char *bfr, int size, FILE *output, mkd_flag_t* flags);
+extern void __mkd_flags_are(FILE *f, mkd_flag_t* flags, int htmlplease);
 
 /*
  * convert a discount2 bitmap flag into a discount3 flag blob
@@ -70,8 +76,6 @@ convert_v2flags(DWORD bitmask, mkd_flag_t *blob)
     mkd_init_flags(blob);
     set_mkd_flag(blob, MKD_DLDISCOUNT);	/* default for discount dls changed from on to off in v3 */
 
-
-    
     for (i=0; i < sizeof(DWORD)*8; i++) {
 
 	bit = 1L << i;
@@ -141,142 +145,186 @@ convert_v2flags(DWORD bitmask, mkd_flag_t *blob)
     }
 }
 
-#undef mkd_in
-MMIOT *mkd_in(FILE *input, DWORD v2flags)
+#ifdef V2_INTERFACE
+MMIOT *mkd_in(FILE *input, mkd_flag_t* v2flags)
 {
     mkd_flag_t v3flags;
-
     convert_v2flags(v2flags, &v3flags);
-
-    return (MMIOT*)mkd3_in(input, &v3flags);
+    return (MMIOT*)__mkd_in(input, &v3flags);
 }
-
-
-#if 0
-char *mkd3_set_flag_string(mkd_flag_t*, char*);	/* set named flags */
-char *mkd_set_flag_string(mkd2_flag_t, char*);	/* set named flags */
+#else
+MMIOT *mkd_in(FILE *input, mkd_flag_t* v3flags)
+{
+    return (MMIOT*)__mkd_in(input, v3flags);
+}
 #endif
 
 
-#undef mkd_string
+#ifdef V2_INTERFACE
 MMIOT *
-mkd_string(const char *text, int length, DWORD v2flags)
+mkd_string(const char *text, int length, mkd_flag_t* v2flags)
 {
     mkd_flag_t v3flags;
-
     convert_v2flags(v2flags, &v3flags);
-
-    return (MMIOT*)mkd3_string(text,length, &v3flags);
+    return (MMIOT*)__mkd_string(text, length, &v3flags);
 }
-
-
-#undef gfm_in
+#else
 MMIOT *
-gfm_in(FILE *input, DWORD v2flags)
+mkd_string(const char *text, int length, mkd_flag_t* v3flags)
 {
-    mkd_flag_t v3flags;
-
-    convert_v2flags(v2flags, &v3flags);
-
-    return (MMIOT*)gfm3_in(input, &v3flags);
+    return (MMIOT*)__mkd_string(text, length, v3flags);
 }
+#endif
 
 
-#undef gfm_string
+#ifdef V2_INTERFACE
 MMIOT *
-gfm_string(const char *text, int length, DWORD v2flags)
+gfm_in(FILE *input, mkd_flag_t* v2flags)
 {
     mkd_flag_t v3flags;
-
     convert_v2flags(v2flags, &v3flags);
-
-    return (MMIOT*)gfm3_string(text, length, &v3flags);
+    return (MMIOT*)__gfm_in(input, &v3flags);
 }
+#else
+MMIOT *
+gfm_in(FILE *input, mkd_flag_t* v3flags)
+{
+    return (MMIOT*)__gfm_in(input, v3flags);
+}
+#endif
 
 
-#undef mkd_compile
+#ifdef V2_INTERFACE
+MMIOT *
+gfm_string(const char *text, int length, mkd_flag_t* v2flags)
+{
+    mkd_flag_t v3flags;
+    convert_v2flags(v2flags, &v3flags);
+    return (MMIOT*)__gfm_string(text, length, &v3flags);
+}
+#else
+MMIOT *
+gfm_string(const char *text, int length, mkd_flag_t* v3flags)
+{
+    return (MMIOT*)__gfm_string(text, length, v3flags);
+}
+#endif
+
+
+#ifdef V2_INTERFACE
 int
-mkd_compile(MMIOT *document, DWORD v2flags)
+mkd_compile(MMIOT *document, mkd_flag_t* v2flags)
 {
     mkd_flag_t v3flags;
-
     convert_v2flags(v2flags, &v3flags);
-
-    return mkd3_compile((Document*)document, &v3flags);
+    return __mkd_compile((Document*)document, &v3flags);
 }
-
-
-#undef mkd_dump
+#else
 int
-mkd_dump(MMIOT *document, FILE *output, DWORD v2flags, char *word)
+mkd_compile(MMIOT *document, mkd_flag_t* v3flags)
 {
-    extern int mkd3_dump(MMIOT*, FILE*, mkd_flag_t*, char*);
-    mkd_flag_t v3flags;
-
-    convert_v2flags(v2flags, &v3flags);
-
-    return mkd3_dump(document, output, &v3flags, word);
+    return __mkd_compile((Document*)document, v3flags);
 }
+#endif
 
 
-#undef markdown
+#ifdef V2_INTERFACE
 int
-markdown(MMIOT *document, FILE *output, DWORD v2flags)
+mkd_dump(Document *document, FILE *output, mkd_flag_t* v2flags, char *word)
 {
-    extern int markdown3(MMIOT*, FILE*, mkd_flag_t*);
-    mkd_flag_t v3flags;
-
+    mkd3_flag_t v3flags;
     convert_v2flags(v2flags, &v3flags);
-
-    return markdown3(document, output, &v3flags);
+    return __mkd_dump(document, output, &v3flags, word);
 }
-
-
-#undef mkd_line
+#else
 int
-mkd_line(char *text, int size, char **ret, DWORD v2flags)
+mkd_dump(Document *document, FILE *output, mkd_flag_t* v3flags, char *word)
 {
-    mkd_flag_t v3flags;
-
-    convert_v2flags(v2flags, &v3flags);
-
-    return mkd3_line(text, size, ret, &v3flags);
+    return __mkd_dump(document, output, v3flags, word);
 }
+#endif
 
 
-#undef mkd_xhtmlpage
+#ifdef V2_INTERFACE
 int
-mkd_xhtmlpage(MMIOT *document, DWORD v2flags,FILE *output)
+markdown(Document *document, FILE *output, mkd_flag_t* v2flags)
 {
-    extern int mkd3_xhtmlpage(MMIOT*, mkd_flag_t*, FILE*);
     mkd_flag_t v3flags;
-
     convert_v2flags(v2flags, &v3flags);
-
-    return mkd3_xhtmlpage(document, &v3flags, output);
+    return __markdown(document, output, &v3flags);
 }
-
-
-#undef mkd_generateline
+#else
 int
-mkd_generateline(char *text, int size, FILE *output, DWORD v2flags)
+markdown(Document *document, FILE *output, mkd_flag_t* v3flags)
+{
+    return __markdown(document, output, v3flags);
+}
+#endif
+
+
+#ifdef V2_INTERFACE
+int
+mkd_line(char *text, int size, char **ret, mkd_flag_t* v2flags)
 {
     mkd_flag_t v3flags;
-
     convert_v2flags(v2flags, &v3flags);
-
-    return mkd3_generateline(text, size, output, &v3flags);
+    return __mkd_line(text, size, ret, &v3flags);
 }
+#else
+int
+mkd_line(char *text, int size, char **ret, mkd_flag_t* v3flags)
+{
+    return __mkd_line(text, size, ret, v3flags);
+}
+#endif
 
 
-#undef mkd_flags_are
+#ifdef V2_INTERFACE
+int
+mkd_xhtmlpage(Document *document, mkd_flag_t* v2flags, FILE *output)
+{
+    mkd_flag_t v3flags;
+    convert_v2flags(v2flags, &v3flags);
+    return __mkd_xhtmlpage(document, &v3flags, output);
+}
+#else
+int
+mkd_xhtmlpage(Document *document, mkd_flag_t* v3flags, FILE *output)
+{
+    return __mkd_xhtmlpage(document, v3flags, output);
+}
+#endif
+
+
+#ifdef V2_INTERFACE
+int
+mkd_generateline(char *text, int size, FILE *output, mkd_flag_t* v2flags)
+{
+    mkd_flag_t v3flags;
+    convert_v2flags(v2flags, &v3flags);
+    return __mkd_generateline(text, size, output, &v3flags);
+}
+#else
+int
+mkd_generateline(char *text, int size, FILE *output, mkd_flag_t* v3flags)
+{
+    return __mkd_generateline(text, size, output, v3flags);
+}
+#endif
+
+
+#ifdef V2_INTERFACE
 void
-mkd_flags_are(FILE *output, DWORD v2flags, int htmlplease)
+mkd_flags_are(FILE *output, mkd_flag_t* v2flags, int htmlplease)
 {
-    extern void mkd3_flags_are(FILE *f, mkd_flag_t* flags, int htmlplease);
     mkd_flag_t v3flags;
-
     convert_v2flags(v2flags, &v3flags);
-
-    mkd3_flags_are(output, &v3flags, htmlplease);
+    __mkd_flags_are(output, &v3flags, htmlplease);
 }
+#else
+void
+mkd_flags_are(FILE *output, mkd_flag_t* v3flags, int htmlplease)
+{
+    __mkd_flags_are(output, v3flags, htmlplease);
+}
+#endif
