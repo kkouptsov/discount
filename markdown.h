@@ -59,7 +59,7 @@ typedef mkd3_flag_t mkd_flag_t;
 void mkd_init_flags(mkd_flag_t *p);
 
 #ifdef V2_INTERFACE
-#define is_flag_set(flags, item)	((flags) & (item])
+#define is_flag_set(flags, item)	((flags) & (item))
 #define set_mkd_flag(flags, item)	((flags) |= (item))
 #define clear_mkd_flag(flags, item)	((flags) &= ~(item))
 #else
