@@ -234,6 +234,9 @@ else
     AC_DEFINE 'CHECKBOX_AS_INPUT' '1'
 fi
 
+if [ "$V2_INTERFACE" ]; then
+    AC_DEFINE V2_INTERFACE 1
+fi
 
 [ "$OS_FREEBSD" -o "$OS_DRAGONFLY" ] || AC_CHECK_HEADERS malloc.h
 
