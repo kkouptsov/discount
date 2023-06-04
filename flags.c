@@ -50,7 +50,7 @@ mkd_flag_isset(mkd_flag_t *flags, int i)
 }
 
 int
-mkd_flag_is_any_set(mkd_flag_t *flags)
+mkd_is_any_flag_set(mkd_flag_t *flags)
 {
     if (!flags)
         return 0;

@@ -52,7 +52,7 @@ typedef mkd3_flag_t mkd_flag_t;
 #endif
 
 int mkd_flag_isset(mkd_flag_t*, int);		/* check a flag status */
-int mkd_flag_is_any_set(mkd_flag_t *);         /* check if any flag is set */
+int mkd_is_any_flag_set(mkd_flag_t *);         /* check if any flag is set */
 
 mkd_flag_t *mkd_flags(void);			/* create a flag blob */
 void mkd_init_flags(mkd_flag_t *);      /* zero out mkd_flag_t struct in place */
