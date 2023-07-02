@@ -558,12 +558,19 @@ typedef struct linkytype {
 #define IS_URL	0x01
 } linkytype;
 
+#ifdef V2_INTERFACE
+static linkytype imaget = { 0, 0, "<img src=\"", "\"",
+			     1, " alt=\"", "\" />", MKD_NOIMAGE & MKD_TAGTEXT & MKD_ALT_AS_TITLE, IS_URL };
+static linkytype linkt  = { 0, 0, "<a href=\"", "\"",
+			     0, ">", "</a>", MKD_NOLINKS, IS_URL };
+#else
 static linkytype imaget = { 0, 0, "<img src=\"", "\"",
 			     1, " alt=\"", "\" />", { { [MKD_NOIMAGE] = 1,
 							[MKD_TAGTEXT] = 1,
 							[MKD_ALT_AS_TITLE] = 1 } }, IS_URL };
 static linkytype linkt  = { 0, 0, "<a href=\"", "\"",
 			     0, ">", "</a>", { {[MKD_NOLINKS] = 1} }, IS_URL };
+#endif
 
 /*
  * pseudo-protocols for [][];
@@ -572,13 +579,23 @@ static linkytype linkt  = { 0, 0, "<a href=\"", "\"",
  * class: generates <span class="link">tag</span>
  * raw: just dump the link without any processing
  */
+#ifdef V2_INTERFACE
+static linkytype specials[] = {
+    { "id:", 3, "<span id=\"", "\"", 0, ">", "</span>", {0}, 0 },
+    { "raw:", 4, 0, 0, 0, 0, 0, MKD_NOHTML, 0 },
+    { "lang:", 5, "<span lang=\"", "\"", 0, ">", "</span>", {0}, 0 },
+    { "abbr:", 5, "<abbr title=\"", "\"", 0, ">", "</abbr>", {0}, 0 },
+    { "class:", 6, "<span class=\"", "\"", 0, ">", "</span>", {0}, 0 },
+};
+#else
 static linkytype specials[] = {
     { "id:", 3, "<span id=\"", "\"", 0, ">", "</span>", {0}, 0 },
     { "raw:", 4, 0, 0, 0, 0, 0, { { [MKD_NOHTML] = 1 } }, 0 },
     { "lang:", 5, "<span lang=\"", "\"", 0, ">", "</span>", {0}, 0 },
     { "abbr:", 5, "<abbr title=\"", "\"", 0, ">", "</abbr>", {0}, 0 },
     { "class:", 6, "<span class=\"", "\"", 0, ">", "</span>", {0}, 0 },
-} ;
+};
+#endif
 
 #define NR(x)	(sizeof x / sizeof x[0])
 
@@ -699,7 +716,12 @@ static int
 linkyformat(MMIOT *f, Cstring text, int image, Footnote *ref)
 {
     linkytype *tag;
+
+#ifdef V2_INTERFACE
+    static mkd_flag_t tagtext = MKD_TAGTEXT;
+#else
     static mkd_flag_t tagtext = { {[MKD_TAGTEXT] = 1} };
+#endif
 
     if ( image )
 	tag = &imaget;

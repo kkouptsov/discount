@@ -50,8 +50,10 @@ enum {  MKD_NOLINKS=0,		/* don't do link processing, block <a> tags  */
 
 
 typedef struct { char bit[MKD_NR_FLAGS]; } mkd3_flag_t;
+typedef uint32_t mkd2_flag_t;
+
 #ifdef V2_INTERFACE
-typedef uint32_t mkd_flag_t;
+typedef mkd2_flag_t mkd_flag_t;
 #else
 typedef mkd3_flag_t mkd_flag_t;
 #endif
@@ -59,9 +61,9 @@ typedef mkd3_flag_t mkd_flag_t;
 void mkd_init_flags(mkd_flag_t *p);
 
 #ifdef V2_INTERFACE
-#define is_flag_set(flags, item)	((flags) & (item))
-#define set_mkd_flag(flags, item)	((flags) |= (item))
-#define clear_mkd_flag(flags, item)	((flags) &= ~(item))
+#define is_flag_set(flags, item)	(*(flags) & (item))
+#define set_mkd_flag(flags, item)	(*(flags) |= (item))
+#define clear_mkd_flag(flags, item)	(*(flags) &= ~(item))
 #else
 #define is_flag_set(flags, item)	((flags)->bit[item])
 #define set_mkd_flag(flags, item)	((flags)->bit[item] = 1)
