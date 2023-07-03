@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "markdown.h"
+#include "flagprocs.h"
 
 struct flagnames {
     int flag;
@@ -48,6 +49,17 @@ mkd_flag_isset(mkd_flag_t *flags, int i)
     return flags ? is_flag_set(flags, i) : 0;
 }
 
+int
+mkd_is_any_flag_set(mkd_flag_t *flags)
+{
+    if (!flags)
+        return 0;
+    for (int i = 0; i < MKD_NR_FLAGS; i++) {
+        if (is_flag_set(flags, i))
+            return 1;
+    }
+    return 0;
+}
 
 void
 __mkd_flags_are(FILE *f, mkd_flag_t* flags, int htmlplease)
@@ -126,6 +138,15 @@ mkd_copy_flags(mkd_flag_t *original)
 	*copy = *original;
 
     return copy;
+}
+
+void
+mkd_copy_flags_inplace(mkd_flag_t *to, mkd_flag_t *from)
+{
+    for (int i = 0; i < MKD_NR_FLAGS; i++) {
+        if (mkd_flag_isset(from, i))
+            mkd_set_flag_num(to, i);
+    }
 }
 
 void
