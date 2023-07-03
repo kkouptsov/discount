@@ -240,7 +240,7 @@ struct string_stream {
 /* the published interface (plus a few local functions that I need to fix)
  */
 extern int  mkd_firstnonblank(Line *);
-extern int  mkd_compile(Document *, mkd_flag_t*);
+extern int  __mkd_compile(Document *, mkd_flag_t*);
 extern int  mkd_document(Document *, char **);
 extern int  mkd_generatehtml(Document *, FILE *);
 extern int  mkd_css(Document *, char **);
@@ -257,11 +257,11 @@ extern void mkd_basename(Document*, char *);
 typedef int (*mkd_sta_function_t)(const int,const void*);
 extern void mkd_string_to_anchor(char*,int, mkd_sta_function_t, void*, int, MMIOT *);
 
-extern Document *mkd_in(FILE *, mkd_flag_t*);
-extern Document *mkd_string(const char*, int, mkd_flag_t*);
+extern Document *__mkd_in(FILE *, mkd_flag_t*);
+extern Document *__mkd_string(const char*, int, mkd_flag_t*);
 
-extern Document *gfm_in(FILE *, mkd_flag_t*);
-extern Document *gfm_string(const char*,int, mkd_flag_t*);
+extern Document *__gfm_in(FILE *, mkd_flag_t*);
+extern Document *__gfm_string(const char*,int, mkd_flag_t*);
 
 extern void mkd_initialize(void);
 extern void mkd_shlib_destructor(void);

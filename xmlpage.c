@@ -20,11 +20,11 @@ extern char* mkd_h1_title(Document *);
 #endif
 
 int
-mkd_xhtmlpage(Document *p, mkd_flag_t* flags, FILE *out)
+__mkd_xhtmlpage(Document *p, mkd_flag_t* flags, FILE *out)
 {
     char *title;
 
-    if ( mkd_compile(p, flags) ) {
+    if ( __mkd_compile(p, flags) ) {
 	DO_OR_DIE( fprintf(out, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
 				"<!DOCTYPE html "
 				" PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\""

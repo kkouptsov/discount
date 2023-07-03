@@ -156,7 +156,7 @@ populate(getc_func getc, void* ctx, mkd_flag_t *flags)
 /* convert a file into a linked list
  */
 Document *
-mkd_in(FILE *f, mkd_flag_t *flags)
+__mkd_in(FILE *f, mkd_flag_t *flags)
 {
     return populate((getc_func)fgetc, f, flags);
 }
@@ -178,7 +178,7 @@ __mkd_io_strget(struct string_stream *in)
 /* convert a block of text into a linked list
  */
 Document *
-mkd_string(const char *buf, int len, mkd_flag_t* flags)
+__mkd_string(const char *buf, int len, mkd_flag_t* flags)
 {
     struct string_stream about;
 
@@ -210,9 +210,9 @@ mkd_generatehtml(Document *p, FILE *output)
 /* convert some markdown text to html
  */
 int
-markdown(Document *document, FILE *out, mkd_flag_t* flags)
+__markdown(Document *document, FILE *out, mkd_flag_t* flags)
 {
-    if ( mkd_compile(document, flags) ) {
+    if ( __mkd_compile(document, flags) ) {
 	mkd_generatehtml(document, out);
 	mkd_cleanup(document);
 	return 0;
@@ -335,7 +335,7 @@ mkd_parse_line(char *bfr, int size, MMIOT *f, mkd_flag_t *flags)
 /* ___mkd_reparse() a line, returning it in malloc()ed memory
  */
 int
-mkd_line(char *bfr, int size, char **res, mkd_flag_t* flags)
+__mkd_line(char *bfr, int size, char **res, mkd_flag_t* flags)
 {
     MMIOT f;
     int len;
@@ -364,7 +364,7 @@ mkd_line(char *bfr, int size, char **res, mkd_flag_t* flags)
 /* ___mkd_reparse() a line, writing it to a FILE
  */
 int
-mkd_generateline(char *bfr, int size, FILE *output, mkd_flag_t* flags)
+__mkd_generateline(char *bfr, int size, FILE *output, mkd_flag_t* flags)
 {
     MMIOT f;
     int status;

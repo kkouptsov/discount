@@ -146,8 +146,8 @@ handle_special(mkd_flag_t *flags, char *opt, int enable)
 }
 
 
-char *
-mkd_set_flag_string(mkd_flag_t *flags, char *optionstring)
+static char *
+___mkd_set_flag_string(mkd_flag_t *flags, char *optionstring)
 {
     int i;
     int enable;
@@ -194,6 +194,15 @@ mkd_set_flag_string(mkd_flag_t *flags, char *optionstring)
 	    return arg;
     }
     return 0;
+}
+
+char *
+mkd_set_flag_string(mkd_flag_t *flags, const char *optionstring)
+{
+    char* opts = strdup(optionstring);
+    char* res = ___mkd_set_flag_string(flags, opts);
+    free(opts);
+    return res;
 }
 
 static void

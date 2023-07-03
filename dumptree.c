@@ -141,11 +141,11 @@ dumptree(Paragraph *pp, Stack *sp, FILE *f)
 
 
 int
-mkd_dump(Document *doc, FILE *out, mkd_flag_t *flags, char *title)
+__mkd_dump(Document *doc, FILE *out, mkd_flag_t *flags, char *title)
 {
     Stack stack;
 
-    if (mkd_compile(doc, flags) ) {
+    if (__mkd_compile(doc, flags) ) {
 
 	CREATE(stack);
 	pushpfx(fprintf(out, "%s", title), doc->code->next ? '+' : '-', &stack);

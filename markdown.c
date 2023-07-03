@@ -1458,7 +1458,7 @@ compile(Line *ptr, int toplevel, MMIOT *f)
  * prepare and compile `text`, returning a Paragraph tree.
  */
 int
-mkd_compile(Document *doc, mkd_flag_t* flags)
+__mkd_compile(Document *doc, mkd_flag_t* flags)
 {
     if ( !doc )
 	return 0;

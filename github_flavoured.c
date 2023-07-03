@@ -83,7 +83,7 @@ gfm_populate(getc_func getc, void* ctx, mkd_flag_t *flags)
 /* convert a block of text into a linked list
  */
 Document *
-gfm_string(const char *buf, int len, mkd_flag_t* flags)
+__gfm_string(const char *buf, int len, mkd_flag_t* flags)
 {
     struct string_stream about;
 
@@ -97,7 +97,7 @@ gfm_string(const char *buf, int len, mkd_flag_t* flags)
 /* convert a file into a linked list
  */
 Document *
-gfm_in(FILE *f, mkd_flag_t* flags)
+__gfm_in(FILE *f, mkd_flag_t* flags)
 {
     return gfm_populate((getc_func)fgetc, f, flags);
 }

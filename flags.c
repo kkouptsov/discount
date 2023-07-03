@@ -50,7 +50,7 @@ mkd_flag_isset(mkd_flag_t *flags, int i)
 
 
 void
-mkd_flags_are(FILE *f, mkd_flag_t* flags, int htmlplease)
+__mkd_flags_are(FILE *f, mkd_flag_t* flags, int htmlplease)
 {
     int i;
     int not, set, even=1;
@@ -96,7 +96,7 @@ void
 mkd_mmiot_flags(FILE *f, MMIOT *m, int htmlplease)
 {
     if ( m )
-	mkd_flags_are(f, &(m->flags), htmlplease);
+	__mkd_flags_are(f, &(m->flags), htmlplease);
 }
 
 void
