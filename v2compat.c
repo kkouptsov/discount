@@ -58,88 +58,122 @@
 #define MKD2_EXPLICITLIST	0x80000000
 
 
+#ifdef V2_INTERFACE
 /*
- * convert a discount2 bitmap flag into a discount3 flag blob
+ * convert v2 flags into v3 flags
  */
+#define set_mkd3_flag(flags, item) ((flags)->bit[item] = 1)
+#define clear_mkd3_flag(flags, item) ((flags)->bit[item] = 0)
+
 static void
-convert_v2flags(DWORD bitmask, mkd_flag_t *blob)
+convert_v2flags(mkd2_flag_t* v2flags, mkd3_flag_t *v3flags)
 {
     int i;
-    DWORD bit;
+	uint32_t bitmask = *v2flags;
+    uint32_t bit;
 
-    mkd_init_flags(blob);
-    set_mkd_flag(blob, MKD_DLDISCOUNT);	/* default for discount dls changed from on to off in v3 */
+    mkd_init_flags(v3flags);
+    set_mkd3_flag(v3flags, MKD_DLDISCOUNT);	/* default for discount dls changed from on to off in v3 */
 
-
-    
-    for (i=0; i < sizeof(DWORD)*8; i++) {
+    for (i=0; i < sizeof(uint32_t)*8; i++) {
 
 	bit = 1L << i;
 
 	switch ( bitmask & bit ) {
-	case MKD2_STRICT:	set_mkd_flag(blob,MKD_STRICT);
-				break;
-	case MKD2_NOLINKS:	set_mkd_flag(blob,MKD_NOLINKS);
-				break;
-	case MKD2_NOIMAGE:	set_mkd_flag(blob,MKD_NOIMAGE);
-				break;
-	case MKD2_NOPANTS:	set_mkd_flag(blob,MKD_NOPANTS);
-				break;
-	case MKD2_NOHTML:	set_mkd_flag(blob,MKD_NOHTML);
-				break;
-	case MKD2_TAGTEXT:	set_mkd_flag(blob,MKD_TAGTEXT);
-				break;
-	case MKD2_NO_EXT:	set_mkd_flag(blob,MKD_NO_EXT);
-				break;
-	case MKD2_CDATA:	set_mkd_flag(blob,MKD_CDATA);
-				break;
-	case MKD2_NOSUPERSCRIPT:set_mkd_flag(blob,MKD_NOSUPERSCRIPT);
-				break;
-	case MKD2_STRICT2:	set_mkd_flag(blob,MKD_STRICT);
-				break;
-	case MKD2_NOTABLES:	set_mkd_flag(blob,MKD_NOTABLES);
-				break;
-	case MKD2_NOSTRIKETHROUGH: set_mkd_flag(blob,MKD_NOSTRIKETHROUGH);
-				break;
-	case MKD2_TOC:		set_mkd_flag(blob,MKD_TOC);
-				break;
-	case MKD2_1_COMPAT:	set_mkd_flag(blob,MKD_1_COMPAT);
-				break;
-	case MKD2_AUTOLINK:	set_mkd_flag(blob,MKD_AUTOLINK);
-				break;
-	case MKD2_SAFELINK:	set_mkd_flag(blob,MKD_SAFELINK);
-				break;
-	case MKD2_NOHEADER:	set_mkd_flag(blob,MKD_NOHEADER);
-				break;
-	case MKD2_TABSTOP:	set_mkd_flag(blob,MKD_TABSTOP);
-				break;
-	case MKD2_NODIVQUOTE:	set_mkd_flag(blob,MKD_NODIVQUOTE);
-				break;
-	case MKD2_NOALPHALIST:	set_mkd_flag(blob,MKD_NOALPHALIST);
-				break;
-	case MKD2_EXTRA_FOOTNOTE: set_mkd_flag(blob,MKD_EXTRA_FOOTNOTE);
-				break;
-	case MKD2_NOSTYLE:	set_mkd_flag(blob,MKD_NOSTYLE);
-				break;
-	case MKD2_NODLDISCOUNT:	clear_mkd_flag(blob,MKD_DLDISCOUNT);
-				break;
-	case MKD2_DLEXTRA:	set_mkd_flag(blob,MKD_DLEXTRA);
-				break;
-	case MKD2_FENCEDCODE:	set_mkd_flag(blob,MKD_FENCEDCODE);
-				break;
-	case MKD2_IDANCHOR:	set_mkd_flag(blob,MKD_IDANCHOR);
-				break;
-	case MKD2_GITHUBTAGS:	set_mkd_flag(blob,MKD_GITHUBTAGS);
-				break;
-	case MKD2_URLENCODEDANCHOR: set_mkd_flag(blob,MKD_URLENCODEDANCHOR);
-				break;
-	case MKD2_LATEX:	set_mkd_flag(blob,MKD_LATEX);
-				break;
-	case MKD2_EXPLICITLIST:	set_mkd_flag(blob,MKD_EXPLICITLIST);
-				break;
+	case MKD2_STRICT:
+		set_mkd3_flag(v3flags, MKD_STRICT);
+		break;
+	case MKD2_NOLINKS:
+		set_mkd3_flag(v3flags, MKD_NOLINKS);
+		break;
+	case MKD2_NOIMAGE:
+		set_mkd3_flag(v3flags, MKD_NOIMAGE);
+		break;
+	case MKD2_NOPANTS:
+		set_mkd3_flag(v3flags, MKD_NOPANTS);
+		break;
+	case MKD2_NOHTML:
+		set_mkd3_flag(v3flags, MKD_NOHTML);
+		break;
+	case MKD2_TAGTEXT:
+		set_mkd3_flag(v3flags, MKD_TAGTEXT);
+		break;
+	case MKD2_NO_EXT:
+		set_mkd3_flag(v3flags, MKD_NO_EXT);
+		break;
+	case MKD2_CDATA:
+		set_mkd3_flag(v3flags, MKD_CDATA);
+		break;
+	case MKD2_NOSUPERSCRIPT:
+		set_mkd3_flag(v3flags, MKD_NOSUPERSCRIPT);
+		break;
+	case MKD2_STRICT2:
+		set_mkd3_flag(v3flags, MKD_STRICT);
+		break;
+	case MKD2_NOTABLES:
+		set_mkd3_flag(v3flags, MKD_NOTABLES);
+		break;
+	case MKD2_NOSTRIKETHROUGH:
+		set_mkd3_flag(v3flags, MKD_NOSTRIKETHROUGH);
+		break;
+	case MKD2_TOC:
+		set_mkd3_flag(v3flags, MKD_TOC);
+		break;
+	case MKD2_1_COMPAT:
+		set_mkd3_flag(v3flags, MKD_1_COMPAT);
+		break;
+	case MKD2_AUTOLINK:
+		set_mkd3_flag(v3flags, MKD_AUTOLINK);
+		break;
+	case MKD2_SAFELINK:
+		set_mkd3_flag(v3flags, MKD_SAFELINK);
+		break;
+	case MKD2_NOHEADER:
+		set_mkd3_flag(v3flags, MKD_NOHEADER);
+		break;
+	case MKD2_TABSTOP:
+		set_mkd3_flag(v3flags, MKD_TABSTOP);
+		break;
+	case MKD2_NODIVQUOTE:
+		set_mkd3_flag(v3flags, MKD_NODIVQUOTE);
+		break;
+	case MKD2_NOALPHALIST:
+		set_mkd3_flag(v3flags, MKD_NOALPHALIST);
+		break;
+	case MKD2_EXTRA_FOOTNOTE:
+		set_mkd3_flag(v3flags, MKD_EXTRA_FOOTNOTE);
+		break;
+	case MKD2_NOSTYLE:
+		set_mkd3_flag(v3flags, MKD_NOSTYLE);
+		break;
+	case MKD2_NODLDISCOUNT:
+		set_mkd3_flag(v3flags, MKD_DLDISCOUNT);
+		break;
+	case MKD2_DLEXTRA:
+		set_mkd3_flag(v3flags, MKD_DLEXTRA);
+		break;
+	case MKD2_FENCEDCODE:
+		set_mkd3_flag(v3flags, MKD_FENCEDCODE);
+		break;
+	case MKD2_IDANCHOR:
+		set_mkd3_flag(v3flags, MKD_IDANCHOR);
+		break;
+	case MKD2_GITHUBTAGS:
+		set_mkd3_flag(v3flags, MKD_GITHUBTAGS);
+		break;
+	case MKD2_URLENCODEDANCHOR:
+		set_mkd3_flag(v3flags, MKD_URLENCODEDANCHOR);
+		break;
+	case MKD2_LATEX:
+		set_mkd3_flag(v3flags, MKD_LATEX);
+		break;
+	case MKD2_EXPLICITLIST:
+		set_mkd3_flag(v3flags, MKD_EXPLICITLIST);
+		break;
 	}
     }
 }
+#endif
 
 #undef mkd_in
 MMIOT *mkd_in(FILE *input, DWORD v2flags)
