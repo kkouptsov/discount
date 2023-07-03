@@ -76,6 +76,13 @@ void ___mkd_or_flags(mkd_flag_t* dst, mkd_flag_t* src);
 int ___mkd_different(mkd_flag_t* dst, mkd_flag_t* src);
 int ___mkd_any_flags(mkd_flag_t* dst, mkd_flag_t* src);
 
+int __mkd_dump(Document *doc, FILE *out, mkd_flag_t *flags, char *title);
+int __markdown(Document *document, FILE *out, mkd_flag_t* flags);
+int __mkd_line(char *bfr, int size, char **res, mkd_flag_t* flags);
+int __mkd_xhtmlpage(Document *p, mkd_flag_t* flags, FILE *out);
+int __mkd_generateline(char *bfr, int size, FILE *output, mkd_flag_t* flags);
+void __mkd_flags_are(FILE *f, mkd_flag_t* flags, int htmlplease);
+
 #define ADD_FLAGS(dst,src)	___mkd_or_flags(dst,src)
 #define DIFFERENT(dst,src)	___mkd_different(dst,src)
 #define ANY_FLAGS(dst,src)	___mkd_any_flags(dst,src)
