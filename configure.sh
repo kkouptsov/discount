@@ -8,6 +8,7 @@
 # load in the configuration file
 #
 ac_help='--enable-amalloc	Enable memory allocation debugging
+--v2-interface		Use library interface version 2 (default is 3)
 --with-tabstops=N	Set tabstops to N characters (default is 4)
 --shared		Build shared libraries (default is static)
 --pkg-config		Install pkg-config(1) glue files
@@ -29,10 +30,11 @@ locals() {
     K=`echo $1 | $AC_UPPERCASE`
     case "$K" in
     --SHARED)
-                echo TRY_SHARED=T
-                ;;
+        echo TRY_SHARED=T
+        ;;
     --ENABLE-*)	enable=`echo $K | sed -e 's/--ENABLE-//' | tr '-' '_'`
-		echo WITH_${enable}=T ;;
+		echo WITH_${enable}=T
+        ;;
     --DEBIAN-GLITCH)
 		echo DEBIAN_GLITCH=T
 		;;
@@ -51,6 +53,8 @@ locals() {
     --GITHUB-CHECKBOX=INPUT)
 		echo GITHUB_CHECKBOX_STYLE=input
 		;;
+    --V2-INTERFACE)
+        echo V2_INTERFACE=T
     esac
 }
 
@@ -230,6 +234,9 @@ else
     AC_DEFINE 'CHECKBOX_AS_INPUT' '1'
 fi
 
+if [ "$V2_INTERFACE" ]; then
+    AC_DEFINE V2_INTERFACE 1
+fi
 
 [ "$OS_FREEBSD" -o "$OS_DRAGONFLY" ] || AC_CHECK_HEADERS malloc.h
 
