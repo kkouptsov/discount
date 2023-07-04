@@ -18,7 +18,7 @@ without complaint, you can then do a ``make'' to compile everything and a
 
 Configure.sh has a few options that can be set:
 
---src=DIR		where the source lives (.)
+--src=DIR			where the source lives (.)
 --prefix=DIR		where to install the final product (/usr/local)
 --execdir=DIR		where to put executables (prefix/bin)
 --sbindir=DIR		where to put static executables (prefix/sbin)
@@ -37,6 +37,7 @@ Configure.sh has a few options that can be set:
 			specified on the command line.
 --cxx-binding		Wrap mkdio.h with (conditional) 'extern "C"' for c++
 			binding.
+--v2-interface		Use library interface version 2 (default is 3)
 
 3) Testing
 
