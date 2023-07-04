@@ -178,7 +178,7 @@ convert_v2flags(mkd2_flag_t* v2flags, mkd3_flag_t *v3flags)
 #ifdef V2_INTERFACE
 MMIOT *mkd_in(FILE *input, mkd_flag_t* v2flags)
 {
-    mkd_flag_t v3flags;
+    mkd3_flag_t v3flags;
     convert_v2flags(v2flags, &v3flags);
     return (MMIOT*)__mkd_in(input, &v3flags);
 }
@@ -194,7 +194,7 @@ MMIOT *mkd_in(FILE *input, mkd_flag_t* v3flags)
 MMIOT *
 mkd_string(const char *text, int length, mkd_flag_t* v2flags)
 {
-    mkd_flag_t v3flags;
+    mkd3_flag_t v3flags;
     convert_v2flags(v2flags, &v3flags);
     return (MMIOT*)__mkd_string(text, length, &v3flags);
 }
@@ -211,7 +211,7 @@ mkd_string(const char *text, int length, mkd_flag_t* v3flags)
 MMIOT *
 gfm_in(FILE *input, mkd_flag_t* v2flags)
 {
-    mkd_flag_t v3flags;
+    mkd3_flag_t v3flags;
     convert_v2flags(v2flags, &v3flags);
     return (MMIOT*)__gfm_in(input, &v3flags);
 }
@@ -228,7 +228,7 @@ gfm_in(FILE *input, mkd_flag_t* v3flags)
 MMIOT *
 gfm_string(const char *text, int length, mkd_flag_t* v2flags)
 {
-    mkd_flag_t v3flags;
+    mkd3_flag_t v3flags;
     convert_v2flags(v2flags, &v3flags);
     return (MMIOT*)__gfm_string(text, length, &v3flags);
 }
@@ -245,7 +245,7 @@ gfm_string(const char *text, int length, mkd_flag_t* v3flags)
 int
 mkd_compile(MMIOT *document, mkd_flag_t* v2flags)
 {
-    mkd_flag_t v3flags;
+    mkd3_flag_t v3flags;
     convert_v2flags(v2flags, &v3flags);
     return __mkd_compile((Document*)document, &v3flags);
 }
@@ -279,7 +279,7 @@ mkd_dump(Document *document, FILE *output, mkd_flag_t* v3flags, char *word)
 int
 markdown(Document *document, FILE *output, mkd_flag_t* v2flags)
 {
-    mkd_flag_t v3flags;
+    mkd3_flag_t v3flags;
     convert_v2flags(v2flags, &v3flags);
     return __markdown(document, output, &v3flags);
 }
@@ -296,7 +296,7 @@ markdown(Document *document, FILE *output, mkd_flag_t* v3flags)
 int
 mkd_line(char *text, int size, char **ret, mkd_flag_t* v2flags)
 {
-    mkd_flag_t v3flags;
+    mkd3_flag_t v3flags;
     convert_v2flags(v2flags, &v3flags);
     return __mkd_line(text, size, ret, &v3flags);
 }
@@ -313,7 +313,7 @@ mkd_line(char *text, int size, char **ret, mkd_flag_t* v3flags)
 int
 mkd_xhtmlpage(Document *document, mkd_flag_t* v2flags, FILE *output)
 {
-    mkd_flag_t v3flags;
+    mkd3_flag_t v3flags;
     convert_v2flags(v2flags, &v3flags);
     return __mkd_xhtmlpage(document, &v3flags, output);
 }
@@ -330,7 +330,7 @@ mkd_xhtmlpage(Document *document, mkd_flag_t* v3flags, FILE *output)
 int
 mkd_generateline(char *text, int size, FILE *output, mkd_flag_t* v2flags)
 {
-    mkd_flag_t v3flags;
+    mkd3_flag_t v3flags;
     convert_v2flags(v2flags, &v3flags);
     return __mkd_generateline(text, size, output, &v3flags);
 }
@@ -347,7 +347,7 @@ mkd_generateline(char *text, int size, FILE *output, mkd_flag_t* v3flags)
 void
 mkd_flags_are(FILE *output, mkd_flag_t* v2flags, int htmlplease)
 {
-    mkd_flag_t v3flags;
+    mkd3_flag_t v3flags;
     convert_v2flags(v2flags, &v3flags);
     __mkd_flags_are(output, &v3flags, htmlplease);
 }
